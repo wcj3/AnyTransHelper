@@ -21,7 +21,7 @@ class CopyPlaylist:
             print('Copying files..')
             for counter, song in enumerate(playlist):
                 file_name = song['key'].index("Name")
-                sys.stdout.write("\r%d" % (counter + 1) + ' of ' + str(len(playlist)))
+                sys.stdout.write('{0}\r'.format(str(counter + 1) + ' of ' + str(len(playlist))))
                 sys.stdout.flush()
                 file_loc = song['string'][-1]
                 regex_file = re.search(r'C:/[\w\/\%.\-\(\)\&$]+', file_loc)
