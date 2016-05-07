@@ -4,6 +4,7 @@ import shutil
 from urllib import parse
 from AnyTransHelper import settings
 import xmltodict
+import sys
 
 
 class CopyPlaylist:
@@ -17,15 +18,16 @@ class CopyPlaylist:
         with open(self.filename) as f:
             doc = xmltodict.parse(f.read())
             playlist = doc['plist']['dict']['dict']['dict']
+            print('Copying files..')
             for counter, song in enumerate(playlist):
                 file_name = song['key'].index("Name")
-                file_index = song['key'].index("Location")
-                print(song['key'][file_name], song['string'][file_name])
-                print(song['key'][file_index], song['string'][-1])
+                sys.stdout.write("\r%d" % (counter + 1) + ' of ' + str(len(playlist)))
+                sys.stdout.flush()
                 file_loc = song['string'][-1]
-                regex_file = re.search(r'C:/[\w\/\%.\-\(\)\&]+', file_loc)
+                regex_file = re.search(r'C:/[\w\/\%.\-\(\)\&$]+', file_loc)
                 decoded_file_loc = parse.unquote(regex_file.group())
                 shutil.copy(decoded_file_loc, 'C:/users/willi/Music/AnyTransHelper/')
+            print("\nDone!")
         return counter
 
     def create_directory(self):
