@@ -14,19 +14,25 @@ class CopyPlaylist:
         self.username = username
         self.playlist_loc = ''
 
+    # copy files from xml to new directory
     def copy_files(self):
         with open(self.filename) as f:
             doc = xmltodict.parse(f.read())
             playlist = doc['plist']['dict']['dict']['dict']
             print('Copying files..')
             for counter, song in enumerate(playlist):
-                file_name = song['key'].index("Name")
+                # Print copy progress to console using string formatting and carriage return
                 sys.stdout.write('{0}\r'.format(str(counter + 1) + ' of ' + str(len(playlist))))
+                # .flush() writes all buffered data stored until this point
                 sys.stdout.flush()
+                # file location is the last index in the branch
                 file_loc = song['string'][-1]
-                regex_file = re.search(r'C:/[\w\/\%.\-\(\)\&$]+', file_loc)
+                # regex to match only abs path of file including any special characters
+                regex_file = re.search(r'C:/[\w/%.\-\(\)&$]+', file_loc)
+                # decode url encoding to display ascii chars
                 decoded_file_loc = parse.unquote(regex_file.group())
-                shutil.copy(decoded_file_loc, 'C:/users/willi/Music/AnyTransHelper/')
+                # copy file to directory
+                shutil.copy(decoded_file_loc, 'C:/users/'+self.username+'/Music/AnyTransHelper/')
             print("\nDone!")
         return counter
 
