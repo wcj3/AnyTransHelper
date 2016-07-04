@@ -1,10 +1,12 @@
 import os
 import re
 import shutil
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
 from urllib import parse
 from AnyTransHelper import settings
 import xmltodict
-import sys
 
 
 class CopyPlaylist:
@@ -28,18 +30,19 @@ class CopyPlaylist:
                 # file location is the last index in the branch
                 file_loc = song['string'][-1]
                 # regex to match only abs path of file including any special characters
-                regex_file = re.search(r'C:/[\w/%.\-\(\)&$]+', file_loc)
+                regex_file = re.search(r'/[\w/%.\-\(\)&$\']+', file_loc)
                 # decode url encoding to display ascii chars
                 decoded_file_loc = parse.unquote(regex_file.group())
-                # copy file to directory
-                shutil.copy(decoded_file_loc, 'C:/users/'+self.username+'/Music/AnyTransHelper/')
+                # copy file to directory. Create directory if it doesn't exist already
+                shutil.copy(decoded_file_loc, self.create_directory())
             print("\nDone!")
         return counter
 
     def create_directory(self):
-        self.playlist_loc = 'C:/users/'+self.username+'/Music/AnyTransHelper'
+        self.playlist_loc = '/Users/'+self.username+'/Music/AnyTransHelper'
         if not os.path.exists(self.playlist_loc):
             os.makedirs(self.playlist_loc)
+            return(self.playlist_loc)
         return self.playlist_loc
 
 if __name__ == '__main__':
