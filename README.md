@@ -1,5 +1,5 @@
 # AnyTransHelper
-Programmatically copy files from iTunes Playlist to AnyTrans
+Programmatically copy files from iTunes Playlist to AnyTrans. This solution was crafted for a specific situiation using Windows 10. 
 # First Things First
 AnyTransHelper uses:
 - Python 3.5
